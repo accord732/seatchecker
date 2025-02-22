@@ -20,17 +20,23 @@
         let studentData = {};
 
         // Load the CSV data
-        fetch('https://raw.githubusercontent.com/accord732/seatchecker/main/students.csv'')
-            .then(response => response.text())
+        fetch('https://raw.githubusercontent.com/accord732/seatchecker/main/students.csv')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
             .then(data => {
                 const parsedData = Papa.parse(data, { header: true });
                 parsedData.data.forEach(row => {
-                    studentData[row.StudentID] = row.SeatNumber;
+                    studentData[row.StudentID.trim()] = row.SeatNumber.trim();
                 });
-            });
+            })
+            .catch(error => console.error('Error loading the CSV file:', error));
 
         function checkSeatNumber() {
-            const studentId = document.getElementById('studentId').value;
+            const studentId = document.getElementById('studentId').value.trim();
             const seatNumber = studentData[studentId];
             const resultElement = document.getElementById('result');
 
