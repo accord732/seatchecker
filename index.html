@@ -20,7 +20,7 @@
         let studentData = {};
 
         // Load the CSV data
-        fetch('students.csv')
+        fetch('https://raw.githubusercontent.com/accord732/seatchecker/main/students.csv'')
             .then(response => response.text())
             .then(data => {
                 const parsedData = Papa.parse(data, { header: true });
