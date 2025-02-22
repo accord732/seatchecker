@@ -30,7 +30,7 @@
             .then(data => {
                 const parsedData = Papa.parse(data, { header: true });
                 parsedData.data.forEach(row => {
-                    studentData[row.StudentID.trim()] = row.SeatNumber.trim();
+                    studentData[row.ID.trim()] = row.Seat.trim();
                 });
             })
             .catch(error => console.error('Error loading the CSV file:', error));
