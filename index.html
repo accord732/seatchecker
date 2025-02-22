@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Exam Seat Number</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button { padding: 10px; margin: 10px 0; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <h1>Check Your Exam Seat Number</h1>
+    <input type="text" id="studentId" placeholder="Enter your Student ID" />
+    <button onclick="checkSeatNumber()">Check Seat Number</button>
+    <p id="result"></p>
+
+    <script>
+        let studentData = {};
+
+        // Load the CSV data
+        fetch('students.csv')
+            .then(response => response.text())
+            .then(data => {
+                const parsedData = Papa.parse(data, { header: true });
+                parsedData.data.forEach(row => {
+                    studentData[row.StudentID] = row.SeatNumber;
+                });
+            });
+
+        function checkSeatNumber() {
+            const studentId = document.getElementById('studentId').value;
+            const seatNumber = studentData[studentId];
+            const resultElement = document.getElementById('result');
+
+            if (seatNumber) {
+                resultElement.textContent = `Your exam seat number is: ${seatNumber}`;
+            } else {
+                resultElement.textContent = "Student ID not found.";
+            }
+        }
+    </script>
+</body>
+</html>
