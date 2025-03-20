@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Seat Number</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Find Your Seat Number</h1>
+    <input type="text" id="studentID" placeholder="Enter your Student ID">
+    <button onclick="findSeat()">Find Seat</button>
+    <div id="result"></div>
+
+    <script>
+        const url = 'https://api.onedrive.com/v1.0/shares/u!YOUR_SHARE_ID/root/content'; // Replace with your link
+
+        async function fetchCSV() {
+            const response = await fetch(url);
+            const data = await response.text();
+            return data.split('\n').map(row => row.split(','));
+        }
+
+        async function findSeat() {
+            const studentID = document.getElementById('studentID').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!studentID) {
+                resultDiv.textContent = 'Please enter your Student ID.';
+                return;
+            }
+
+            const rows = await fetchCSV();
+            let found = false;
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
+                if (rows[i][0].trim() === studentID) {
+                    resultDiv.textContent = `Your seat number is: ${rows[i][1]}`;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                resultDiv.textContent = 'Student ID not found.';
+            }
+        }
+    </script>
+</body>
+</html>
